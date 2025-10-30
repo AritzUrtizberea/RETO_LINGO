@@ -1,0 +1,28 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+
+td {
+    border: 1px solid #ccc;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+}
+.tecla img {
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    margin: 2px;
+}
+.juego img {
+    width: 35px;
+    height: 35px;
+}
+.c{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
