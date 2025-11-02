@@ -1,28 +1,164 @@
+:root {
+  --color-celeste-01: #004c99;
+  --color-celeste-02: #003399;
+  --color-celeste-03: #003366;
+  --color-celeste-04: #0044cc;
+  --color-celeste-05: #0066cc;
+  --color-celeste-06: #006699;
+
+  --color-naranja-vivo: #f0b375;
+  --color-principal: var(--color-celeste-04); /* Azul más intenso para elementos clave */
+  --color-fondo-oscuro: var(--color-celeste-03); /* Para fondos de secciones o tarjetas */
+  --color-acento: var(--color-naranja-vivo); /* Para botones o notificaciones */
+}
+
 body{
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
+    background-color:var(--color-celeste-01);
+    border: 1px black solid;
+    width: 100%;
 }
 
+header{
+    background-color: var(--color-celeste-02);
+    color: #f0b375;
+    padding: 18px;
+    text-align: center;
+    font-size: 25px;
+    width: 100%;
+    
 
-td {
+
+}
+header .titulo{
+    border: 1px solid black;
+    box-shadow: 4px 4px 4px black;
+    padding: 7px;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+header img{
+    border-radius: 10px;
+}
+
+nav{
+    background-color: var(--color-celeste-04);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 10px;
+    border: black 1px solid;
+    width: 100%;
+}
+
+nav div{
+    border: 1px solid black;
+    padding: 7px;
+    box-shadow: 4px 4px 4px black;
+    background-color: rgb(235, 167, 231);
+    font-weight: bold;
+}
+td { 
     border: 1px solid #ccc;
+    box-shadow: 2px 2px 2px black;
     width: 40px;
     height: 40px;
     text-align: center;
 }
-.tecla img {
+main{
+    width: 100%;
+}
+
+.tecla img {  /*estaba ya*/
     cursor: pointer;
     width: 35px;
     height: 35px;
     margin: 2px;
 }
-.juego img {
+
+.juego img { /*estaba ya*/
     width: 35px;
     height: 35px;
 }
+
 .c{
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+}
+
+.c h2{
+    text-align: center;
+    border: 1px solid black;
+    padding: 7px;
+    box-shadow: 4px 4px 4px black;
+    background-color: var(--color-naranja-vivo);
+}
+
+.c .panelJuego{
+    width: 100%;
+}
+
+.c .teclaoJuego{
+    width: 100%;
+}
+
+footer{
+    background-color: var(--color-celeste-02);
+    padding: 25px;
+    margin-top: 50px;
+    text-align: center;
+    color:var(--color-naranja-vivo);
+    width: 100%;
+}
+
+
+    
+@media screen and (min-width: 768px) {
+  
+  /* 1. Centrar y limitar el ancho del contenido principal */
+  main {
+    max-width: 1200px;/* Ancho máximo ideal para el juego en escritorio */
+    margin: 20px auto; /* Centrar el contenedor principal */
+    padding: 20px;
+    background-color: var(--color-fondo-oscuro); /* Fondo para que se destaque */
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* 2. Aplicar un poco de padding al body para que no se pegue a los lados */
+  body {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  /* 3. Aumentar el tamaño de letra en el header/nav para mejor legibilidad */
+  header {
+    font-size: 30px;
+    padding: 25px;
+  }
+  
+  nav div {
+    /* Aumentamos un poco el padding de los botones de navegación */
+    padding: 10px 15px;
+  }
+
+  /* 4. Ajustes visuales para el área de juego */
+  .c {
+    padding: 20px 0;
+  }
+  
+  /* 5. Asegurar que los componentes del juego y el teclado se vean bien centrados y dimensionados */
+  .c .panelJuego,
+  .c .teclaoJuego {
+    /* Ocupan el 100% del MAIN (que ya tiene un max-width de 900px) */
+    width: 100%; 
+  }
 }
