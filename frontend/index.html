@@ -11,7 +11,7 @@
 
     <header><div><img src="assets/Lingo.jpg"></a></div><h1 class="titulo">Lingo</h1></header>
     <nav>
-        <div>Estadisticas</div><div>Idioma</div>
+        <button>Estadisticas</button><button>Idioma</button>
     </nav>
 
     <main>
@@ -21,7 +21,21 @@
         <div id="contenedorTeclado" class = "c teclaoJuego">
             <h2>Teclado</h2>
         </div>
+        <div id="contenedorContador">
+                Tiempo: <span id="contador">15</span>s
+        </div>
     </main>
+    
+    <dialog id="finPartida">
+        <h1>Fin de partida</h1>
+        <h2 id="resultado"></h2>
+        <div>
+            <button onclick="volverAJugar()">Volver a jugar</button>
+            <button onclick="salir()">Salir</button>
+            <button onclick="mostrarEstadisticas()">Estadisticas</button>
+        </div>
+
+    </dialog>
 
     <footer>
         <div>Aritz Urtizberea</div>
