@@ -63,14 +63,14 @@ nav {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
-  padding: 10px;
+  padding: 15px;
   border: black 1px solid;
   width: 100%;
 }
 
 nav button {
   border: 1px solid black;
-  padding: 7px;
+  padding: 15px;
   box-shadow: 4px 4px 4px black;
   background-color: rgb(235, 167, 231);
   font-weight: bold;
@@ -106,12 +106,18 @@ main {
   color: #FFD700;
   padding: 5px 10px;
   z-index: 5;
-  text-align: right;
+  text-align: center;
   margin: 0;
 }
 
-#contador {
-  color: #FF0000;
+#tiempo {
+  color: black;
+  border: 1px solid black;
+  padding: 10px;
+  box-shadow: 4px 4px 4px black;
+  background-color: rgb(235, 167, 231);
+  font-weight: bold;
+
 }
 /* --- NUEVOS ESTILOS PARA DIVS (GRID y FLEXBOX) --- */
 /* 1. Estilos del Tablero de Juego */
@@ -306,6 +312,10 @@ footer {
   width: 100%;
 }
 
+footer div{
+  font-weight: bold;
+}
+
 
 
 @media screen and (min-width: 768px) {
@@ -333,8 +343,8 @@ footer {
   }
 
   dialog {
-        width: 500px;   /* Forzar ancho de escritorio */
-        height: 500px;  /* Forzar alto de escritorio (para que sea cuadrado) */
+        width: 600px;   /* Forzar ancho de escritorio */
+        height: 700px;  /* Forzar alto de escritorio (para que sea cuadrado) */
         
         /* Asegurarse de que el centrado no se anule por margin: auto */
         margin: 0; 
@@ -366,6 +376,10 @@ footer {
     width: 35px;
     height: 35px;
   }
+
+  #contenedorContador {
+  text-align: right;
+}
 
   
 }
