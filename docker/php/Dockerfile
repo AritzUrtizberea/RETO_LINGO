@@ -1,6 +1,21 @@
 # Usa una imagen base de PHP con Apache
 FROM php:8.3-apache
 
+# Instala herramientas necesarias para Node.js
+RUN apt-get update && apt-get install -y \
+    curl \
+    gnupg
+
+# Añade el repositorio de Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+
+# Instala Node.js
+RUN apt-get install -y nodejs
+
+# Actualiza NPM a su última versión globalmente
+RUN npm install -g npm@latest
+
+
 # 1. Instalar dependencias del sistema y extensiones de PHP
 RUN apt-get update && apt-get install -y \
     git \

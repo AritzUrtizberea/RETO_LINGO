@@ -29,10 +29,10 @@ services:
     restart: unless-stopped
     environment:
       # Variables de entorno de MySQL. ¡Cambia las contraseñas!
-      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: lingo_db
       MYSQL_USER: user
-      MYSQL_PASSWORD: userpass
+      MYSQL_PASSWORD: ${DB_USER_PASSWORD}
     # Mapea un volumen para persistir los datos de la base de datos
     volumes:
       - dblingo:/var/lib/mysql
@@ -58,6 +58,20 @@ services:
       - db
     networks:
       - lingo
+
+  node:
+    image: node:22
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - "5173:5173"
+    #Se instalan dependencias y pone en marcha el servicio  
+    command: sh -c "npm install && npm run dev -- --host"
+    # Conecta a la red interna
+    networks:
+      - lingo
+
 
 # ----------------------------------------------------
 # 4. REDES Y VOLÚMENES
