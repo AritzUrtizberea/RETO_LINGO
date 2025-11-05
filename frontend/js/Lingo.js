@@ -7,7 +7,14 @@ const contenedorJuego = document.getElementById("contenedor");
 const contenedorTeclado = document.getElementById("contenedorTeclado");
 let posicion = { "fila": 0, "columna": 0 };
 let popUp = document.getElementById("finPartida");
-
+// 🛑 NUEVAS VARIABLES GLOBALES PARA EL TIEMPO 🛑
+const TIEMPO_MAXIMO_TURNO = 30;
+let tiempoRestante = TIEMPO_MAXIMO_TURNO;
+let intervaloTurno = null;
+let tiempoGlobal = 0;
+let intervaloGlobal = null;
+// Asume que tienes un elemento en tu HTML con id="tiempo" (ej: <div>Tiempo: 15s</div>)
+const tiempoDiv = document.getElementById("tiempo");
 
 
 const teclado = [
@@ -88,12 +95,62 @@ function manejarTecla(letra) {
         posicion.fila++;
         posicion.columna = 0;
         
-        if (posicion.fila >= N) {
+        if (posicion.fila < N) {
+            iniciarTiempoTurno(); // Reinicia el contador de 15s
+        } else {
+            // El juego termina por intentos agotados (se llama finDePartida sin flag)
             finDePartida(`¡Has perdido! La palabra era: ${SECRETA}`);
         }
     }
 }
 
+// 🛑 NUEVAS FUNCIONES DE CONTROL DE TIEMPO 🛑
+
+function detenerTiempoGlobal() {
+    if (intervaloGlobal) {
+        clearInterval(intervaloGlobal);
+        intervaloGlobal = null;
+    }
+}
+
+function iniciarTiempoGlobal() {
+    detenerTiempoGlobal(); // Asegura que no haya contadores duplicados
+    tiempoGlobal = 0; // Reinicia el contador total (para el ranking)
+    intervaloGlobal = setInterval(() => {
+        tiempoGlobal++;
+        // Este contador es el ranking global y no se actualiza en pantalla (es oculto)
+    }, 1000);
+}
+
+function actualizarDisplayTiempo() {
+    if (tiempoDiv) {
+        tiempoDiv.innerHTML = `Tiempo: ${tiempoRestante}s`;
+    }
+}
+
+function detenerTiempoTurno() {
+    if (intervaloTurno) {
+        clearInterval(intervaloTurno);
+        intervaloTurno = null;
+    }
+}
+
+function iniciarTiempoTurno() {
+    detenerTiempoTurno(); // Asegura que no hay dos corriendo
+    tiempoRestante = TIEMPO_MAXIMO_TURNO;
+    actualizarDisplayTiempo();
+
+    intervaloTurno = setInterval(() => {
+        tiempoRestante--;
+        actualizarDisplayTiempo();
+
+        if (tiempoRestante <= 0) {
+            detenerTiempoTurno();
+            // Lógica de pérdida por tiempo: se pasa el flag 'true'
+            finDePartida(`¡Tiempo agotado! La palabra era: ${SECRETA}`, true);
+        }
+    }, 1000);
+}
 
 function validar(SECRETA, cadena) {
 
@@ -198,12 +255,27 @@ async function obtenerSecreta() {
     }
 }
 
-function finDePartida(resultado){
-    document.getElementById("resultado").innerHTML = resultado;
+function finDePartida(resultado, porTiempo = false){
+    // 🛑 DETENER AMBOS TIEMPOS 🛑
+    detenerTiempoTurno();
+    detenerTiempoGlobal();
+    
+    // Solo mostrar el tiempo global si no se perdió por tiempo
+    let mensajeTiempo = "";
+    if (!porTiempo) {
+        // Formato para mostrar el tiempo total
+        const segundos = tiempoGlobal % 60;
+        const minutos = Math.floor(tiempoGlobal / 60);
+        const tiempoFormateado = (minutos > 0 ? `${minutos} min ` : '') + `${segundos} seg`;
+        
+        mensajeTiempo = `<p>Tu tiempo total fue de <b>${tiempoFormateado}</b>.</p>`;
+    }
+    
+    document.getElementById("resultado").innerHTML = `${resultado} ${mensajeTiempo}`;
     popUp.showModal();
 }
 
-function volverAJugar(){
+async function volverAJugar(){
     panelJuego();
     panelTeclado();
     obtenerSecreta();
@@ -211,6 +283,10 @@ function volverAJugar(){
     posicion = { "fila": 0, "columna": 0 };
     encontrado = false;
     popUp.close();
+
+    await obtenerSecreta(); // Espera a la palabra
+    iniciarTiempoGlobal();
+    iniciarTiempoTurno();
 
 }
 
@@ -225,4 +301,8 @@ function mostrarEstadisticas(){
 
 panelJuego();
 panelTeclado();
-obtenerSecreta();
+// 🛑 INICIO DE AMBOS TIEMPOS (después de obtener la palabra) 🛑
+obtenerSecreta().then(() => {
+    iniciarTiempoGlobal();
+    iniciarTiempoTurno();
+});
