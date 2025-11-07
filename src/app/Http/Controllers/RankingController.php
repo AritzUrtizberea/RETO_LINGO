@@ -12,9 +12,13 @@ class RankingController extends Controller
      */
     public function index()
     {
-        $rankings = Ranking::all();
+        // 1. Prioriza los aciertos (true > false)
+        // 2. Ordena por el tiempo de forma ascendente (menor tiempo = mejor)
+        $rankings = Ranking::orderBy('acierto', 'desc')
+                           ->orderBy('tiempo', 'asc')
+                           ->get();
+
         return view('rankings.index', ['rankings' => $rankings]);
-        //
     }
 
     /**
@@ -29,24 +33,9 @@ class RankingController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    // 1. **Validación de Datos**
-    $validatedData = $request->validate([
-        'nombre' => 'required|string|max:255',
-        'tiempo' => 'required|integer|min:0',
-        'acierto' => 'required|boolean', // O 'required|in:0,1' si lo mandas como número
-    ]);
-
-    // 2. **Crear y Guardar el Registro**
-    $ranking = Ranking::create($validatedData);
-    
-    // 3. **Responder a la Petición JS**
-    // Una respuesta JSON es típica para peticiones AJAX
-    return response()->json([
-        'message' => 'Ranking guardado con éxito',
-        'ranking' => $ranking
-    ], 201); // 201 Created es el código estándar para recursos creados
-}
+    {
+        //
+    }
 
     /**
      * Display the specified resource.

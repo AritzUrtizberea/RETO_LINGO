@@ -32,7 +32,11 @@
         
     </header>
     <nav>
-        <button>Estadisticas</button><button>Idioma</button>
+        <button>Estadisticas</button>
+        <button>Idioma</button>
+        <a href="{{ route('ranking.index') }}" style="text-decoration: none;">
+        <button>Ver Ranking</button>
+        </a>
     </nav>
 
     <main>
@@ -47,15 +51,15 @@
         </div>
     </main>
 
-    <dialog id="finPartida">
-        <h1>Fin de partida</h1>
-        <h2 id="resultado"></h2>
-        <div>
-            <button onclick="volverAJugar()">Volver a jugar</button>
-            <button onclick="salir()">Salir</button>
-            <button onclick="mostrarEstadisticas()">Estadisticas</button>
-        </div>
-    </dialog>
+    <dialog id="finPartida" data-ranking-url="{{ route('ranking.index') }}">
+    <h1>Fin de partida</h1>
+    <h2 id="resultado"></h2>
+    <div>
+        <button onclick="volverAJugar()">Volver a jugar</button>
+        <button onclick="salir()">Salir</button>
+        <button onclick="mostrarEstadisticas()">Estadisticas</button>
+    </div>
+</dialog>
 
     <footer>
         <div>Aritz Urtizberea</div>
@@ -64,6 +68,9 @@
     </footer>
     
     {{-- MODIFICADO: Usando asset() para el script JS --}}
+   <script>
+    const RANKING_URL = "{{ route('ranking.index') }}"; 
+</script>
     <script src="{{ asset('js/Lingo.js') }}"></script>
 </body>
 </html>

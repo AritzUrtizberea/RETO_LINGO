@@ -16,6 +16,8 @@ class PalabraController extends Controller
         //return view('palabras.verificar', ['existe' => $existe]);
     }
 
+    
+
     public function indexRandom($cantidad = 1)
     {
     $palabras = Palabra::inRandomOrder()->take($cantidad)->get();
