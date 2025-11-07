@@ -1,0 +1,392 @@
+:root {
+  --color-celeste-01: #004c99;
+  --color-celeste-02: #003399;
+  --color-celeste-03: #003366;
+  --color-celeste-04: #0044cc;
+  --color-celeste-05: #0066cc;
+  --color-celeste-06: #006699;
+  --color-naranja-vivo: #f0b375;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+    width: 100%; 
+    /* Oculta cualquier cosa que se salga del ancho (incluye el scroll) */
+    overflow-x: hidden; 
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: var(--color-celeste-01);
+  border: 1px black solid;
+  width: 100%;
+}
+
+header {
+  background-color: var(--color-celeste-02);
+  color: #f0b375;
+  padding: 18px;
+  text-align: center;
+  font-size: 25px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+header .titulo {
+  border: 1px solid black;
+  box-shadow: 4px 4px 4px black;
+  padding: 14px;
+  width: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+header img {
+  border-radius: 10px;
+  width: 70px;
+  height: 70px;
+}
+
+header .logout-button{
+  border: 1px solid black;
+  box-shadow: 4px 4px 4px black;
+  padding: 14px;
+}
+
+nav {
+  background-color: var(--color-celeste-04);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 15px;
+  border: black 1px solid;
+  width: 100%;
+}
+
+nav button {
+  border: 1px solid black;
+  padding: 15px;
+  box-shadow: 4px 4px 4px black;
+  background-color: rgb(235, 167, 231);
+  font-weight: bold;
+  width: 110px;
+  text-align: center;
+}
+
+nav button:hover {
+  scale: 1.2;
+}
+
+main {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: var(--color-fondo-oscuro); 
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+#contenedor {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+#contenedorContador {
+  /* Se recomienda poner el contador fuera del flujo de los contenedores .c 
+     o asegurarte de que su posición sea absoluta con respecto a 'main' o 'body' */
+  top: 10px;
+  right: 10px;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #FFD700;
+  padding: 5px 10px;
+  z-index: 5;
+  text-align: center;
+  margin: 0;
+}
+
+#tiempo {
+  color: black;
+  border: 1px solid black;
+  padding: 10px;
+  box-shadow: 4px 4px 4px black;
+  background-color: rgb(235, 167, 231);
+  font-weight: bold;
+
+}
+/* --- NUEVOS ESTILOS PARA DIVS (GRID y FLEXBOX) --- */
+/* 1. Estilos del Tablero de Juego */
+#game-grid {
+    display: grid;
+    grid-template-rows: repeat(5, auto); 
+    gap: 6px; 
+    max-width: 350px;
+    margin: 0 auto; 
+}
+
+.word-attempt {
+    /* CSS Flexbox: Contenedor de cada fila de intento */
+    display: flex;
+    justify-content: center;
+    gap: 6px; 
+}
+
+.letter-box {
+    /* Estilo de cada celda de letra */
+    width: 55px; 
+    height: 55px; 
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 2px black;
+    background-color: var(--color-celeste-06);
+    transition: background-color 0.3s ease;
+}
+
+.letter-box img { 
+    /* Estilo para la imagen de la letra (Sustituye a .juego img) */
+    width: 30px; 
+    height: 30px;
+    object-fit: contain; /* preguntar */
+}
+
+/* Clases de retroalimentación (Feedback Visual) */
+.letter-box.correct { /* 🟩 Letra en la posición correcta */
+    background-color: #538d4e; 
+    border-color: #538d4e;
+}
+.letter-box.present { /* 🟧 Letra presente pero en otra posición */
+    background-color: #b59f3b; 
+    border-color: #b59f3b;
+}
+.letter-box.absent { /* 🟥 Letra no incluida */
+    background-color: #787c7e; 
+    border-color: #787c7e;
+}
+
+/* 2. Estilos del Teclado Virtual */
+#keyboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 15px auto;
+    
+    /* HACEMOS ESTE CONTENEDOR FLEXIBLE: Ocupará solo el espacio necesario 
+       y se centrará dentro del padre. */
+    width: fit-content; /* Ocupa solo el ancho necesario para el contenido más ancho */
+    max-width: 95vw; /* Límitamos al 95% del ancho de la pantalla en cualquier caso */
+}
+
+.keyboard-row {
+    /* Fila de teclas */
+    display: flex;
+    justify-content: center; 
+    gap: 4px; /* Reducimos ligeramente el gap para ahorrar espacio en móviles */
+    /* NO usamos flex-wrap, ya que el teclado tiene un número fijo de teclas por fila */
+}
+
+.keyboard-key img { 
+    /* Reducimos aún más el tamaño de la imagen/tecla para asegurar que caben 10 en móvil */
+    width: 24px; 
+    height: 24px;
+    margin: 1px; /* Reducimos el margen interno si es necesario */
+}
+
+.keyboard-key { 
+    /* Estilo de cada tecla (Sustituye a td.tecla) */
+    cursor: pointer;
+    background-color: #fff; 
+    border-radius: 4px;
+    box-shadow: 1px 1px 1px black;
+    padding: 2px;
+    transition: background-color 0.2s, transform 0.1s;
+    line-height: 0;
+}
+
+.keyboard-key:hover {
+    transform: scale(1.05);
+    box-shadow: 2px 2px 2px black;
+}
+
+.c {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.c h2 {
+  text-align: center;
+  border: 1px solid black;
+  padding: 7px;
+  box-shadow: 4px 4px 4px black;
+  background-color: var(--color-naranja-vivo);
+  margin-bottom: 14px;
+  margin-top: 45px;
+}
+
+#contenedor {
+  margin-bottom: 15px;
+}
+
+.c .panelJuego {
+  width: 100%;
+}
+
+.c .teclaoJuego {
+  width: 100%;
+}
+
+dialog{
+    padding: 10px;
+    
+    /* 🛑 CORRECCIÓN: Quitamos el fixed/transform aquí */
+    /* Lo esencial para el centrado horizontal es margin: auto */
+    margin: auto; 
+    
+    /* Dimensiones móviles */
+    width: 90%; 
+    max-width: 500px;
+    height: auto; 
+    max-height: 90vh; 
+    
+    background-color: rgb(105, 189, 201);
+    border-radius: 10px;
+    box-shadow: 4px 4px 4px black;
+    
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+
+dialog[open] {
+    /* 🛑 Centrado Geométrico (Mejor para asegurar que ignora otros flows) */
+    position: fixed; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* Mostrar forzadamente si la regla 'hidden' interfiere */
+    display: flex; 
+}
+dialog button{
+  padding: 10px;
+  margin: 10px;
+  background-color: var(--color-naranja-vivo);
+  box-shadow: 4px 4px 4px black;
+  border-radius: 10px;
+  font-weight: bold;
+  
+}
+
+dialog h1{
+  margin-bottom: 20px;
+}
+
+dialog h2{
+  margin-bottom: 10px;
+}
+dialog button:hover{
+  padding: 10px;
+  margin: 10px;
+  background-color: rgb(151, 118, 228);
+  box-shadow: 4px 4px 4px black;
+  border-radius: 10px;
+  transform: scale(1.2);
+}
+
+footer {
+  background-color: var(--color-celeste-02);
+  padding: 25px;
+  margin-top: 50px;
+  text-align: center;
+  color: var(--color-naranja-vivo);
+  width: 100%;
+}
+
+footer div{
+  font-weight: bold;
+}
+
+
+
+@media screen and (min-width: 768px) {
+
+  /* 1. Centrar y limitar el ancho del contenido principal */
+  main {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: var(--color-fondo-oscuro);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+
+  /* 3. Aumentar el tamaño de letra en el header/nav para mejor legibilidad */
+  header {
+    font-size: 30px;
+    padding: 25px;
+  }
+
+  header img {
+    border-radius: 10px;
+    width: 100px;
+    height: 100px;
+  }
+
+  dialog {
+        width: 600px;   /* Forzar ancho de escritorio */
+        height: 700px;  /* Forzar alto de escritorio (para que sea cuadrado) */
+        
+        /* Asegurarse de que el centrado no se anule por margin: auto */
+        margin: 0; 
+    }
+
+  /* 5. Asegurar que los componentes del juego y el teclado se vean bien centrados y dimensionados */
+  .c .panelJuego,
+  .c .teclaoJuego {
+    width: 100%;
+  }
+
+  /* --- Adaptación de estilos de media query a los nuevos DIVs --- */
+  .keyboard-row {
+        gap: 6px; /* Aumentamos el gap de nuevo en escritorio */
+    }
+    
+  .keyboard-key img { 
+      width: 35px;
+      height: 35px;
+      margin: 2px;
+  }
+    /* Podemos hacer el contenedor un poco más grande en escritorio */
+    #keyboard-grid {
+        max-width: 600px;
+    }
+
+  .letter-box img { 
+    /* Adaptación de .juego img */
+    width: 35px;
+    height: 35px;
+  }
+
+  #contenedorContador {
+  text-align: right;
+}
+
+  
+}
