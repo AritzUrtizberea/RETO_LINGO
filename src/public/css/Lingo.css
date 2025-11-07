@@ -30,15 +30,23 @@ body {
 }
 
 header {
-  background-color: var(--color-celeste-02);
-  color: #f0b375;
-  padding: 18px;
-  text-align: center;
-  font-size: 25px;
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
+    background-color: var(--color-celeste-02);
+    color: #f0b375;
+    padding: 18px;
+    text-align: center;
+    font-size: 25px;
+    width: 100%;
+    display: flex;
+    
+    /* 🛑 CAMBIO CLAVE: Cambia esto 🛑 */
+    justify-content: space-between; 
+    
+    /* Y añade esto para que se vea mejor */
+    align-items: center; 
+    position: relative; /* Buena práctica para 'absolute' anidado */
 }
+
+/* El resto de tu CSS (.titulo, img, .logout-button) puede quedar igual */
 
 header .titulo {
   border: 1px solid black;
@@ -325,68 +333,59 @@ footer div{
 
 
 
-@media screen and (min-width: 768px) {
-
-  /* 1. Centrar y limitar el ancho del contenido principal */
-  main {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: var(--color-fondo-oscuro);
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  }
-
-  /* 3. Aumentar el tamaño de letra en el header/nav para mejor legibilidad */
-  header {
-    font-size: 30px;
-    padding: 25px;
-  }
-
-  header img {
-    border-radius: 10px;
-    width: 100px;
-    height: 100px;
-  }
-
-  dialog {
-        width: 600px;   /* Forzar ancho de escritorio */
-        height: 700px;  /* Forzar alto de escritorio (para que sea cuadrado) */
-        
-        /* Asegurarse de que el centrado no se anule por margin: auto */
-        margin: 0; 
+@media screen and (max-width: 767px) {
+    
+    header {
+        /* 1. Apila los elementos del header verticalmente */
+        flex-direction: column; 
+        gap: 15px; /* Añade espacio entre el logo, título y botón */
     }
 
-  /* 5. Asegurar que los componentes del juego y el teclado se vean bien centrados y dimensionados */
-  .c .panelJuego,
-  .c .teclaoJuego {
-    width: 100%;
-  }
-
-  /* --- Adaptación de estilos de media query a los nuevos DIVs --- */
-  .keyboard-row {
-        gap: 6px; /* Aumentamos el gap de nuevo en escritorio */
+    header .titulo {
+        /* 2. Quita el centrado absoluto para que fluya normal */
+        position: static; 
+        transform: none;
+        width: 90%;
+        margin: 0;
+        /* Hacemos el título más pequeño en móvil */
+        font-size: 22px; 
+        padding: 10px;
     }
     
-  .keyboard-key img { 
-      width: 35px;
-      height: 35px;
-      margin: 2px;
-  }
-    /* Podemos hacer el contenedor un poco más grande en escritorio */
-    #keyboard-grid {
-        max-width: 600px;
+    header .logout-button {
+        /* 3. Asegura que el botón de salir no sea demasiado ancho */
+        width: 90%;
+        padding: 10px;
     }
 
-  .letter-box img { 
-    /* Adaptación de .juego img */
-    width: 35px;
-    height: 35px;
-  }
+    nav {
+        /* 4. Apila los botones de navegación verticalmente */
+        flex-direction: column;
+        gap: 10px;
+        align-items: center; /* Centra los botones */
+    }
 
-  #contenedorContador {
-  text-align: right;
+    nav button, nav a button {
+        /* 5. Haz que los botones ocupen más ancho para tocar fácil */
+        width: 80%; 
+    }
+
+    /* 6. Ajustar el tamaño del teclado en móvil (Opcional pero recomendado) */
+    .keyboard-key img { 
+        width: 20px; 
+        height: 20px;
+    }
+
+    .letter-box {
+        width: 45px;
+        height: 45px;
+    }
+    .letter-box img {
+        width: 25px;
+        height: 25px;
+    }
+    #game-grid {
+        max-width: 300px;
+    }
 }
-
   
-}
