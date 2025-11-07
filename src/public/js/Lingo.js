@@ -23,6 +23,100 @@ const teclado = [
     ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
 ];
 
+// =========================================================================
+// 🧩 FUNCIONES PARA LA API DE VERIFICACIÓN (MODIFICADAS)
+// =========================================================================
+
+/**
+ * Chequea la existencia de una palabra en el diccionario externo.
+ * @param {string} palabra La palabra de 5 letras a verificar.
+ * @returns {Promise<boolean>} Retorna una promesa que resuelve a true si existe, o false si no existe o hay error.
+ */
+async function verificarPalabra(palabra) {
+    const API_CHECK_URL = 'http://185.60.43.155:3000/api/check';
+    const palabraMin = palabra.toLowerCase();
+    
+    if (palabraMin.length !== 5) {
+        return false; 
+    }
+
+    const url = `${API_CHECK_URL}/${palabraMin}`;
+
+    try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            console.error(`Error HTTP al chequear la palabra: ${response.status}`);
+            return false;
+        }
+
+        const data = await response.json();
+        return data.exists === true; // Asegurarse de que sea un booleano
+
+    } catch (error) {
+        console.error("Error de conexión con la API externa:", error);
+        return false;
+    }
+}
+
+/**
+ * Función asíncrona que coordina la verificación de la API y la lógica del juego.
+ * 🛑 MODIFICADA: Ahora avanza a la siguiente línea si la palabra no es válida. 🛑
+ */
+async function validarIntentoAsincrono(palabraSecreta, intento) {
+    
+    // 1. Detener el contador de turno
+    detenerTiempoTurno();
+
+    // 2. Verificar la palabra con la API externa
+    const esValida = await verificarPalabra(intento);
+    
+    if (!esValida) {
+        // 3a. Palabra NO válida.
+        alert("La palabra no es válida en el diccionario. Se pierde el intento.");
+        
+        // Pintar la fila de rojo (o algún feedback visual)
+        for (let i = 0; i < N; i++) {
+            const idCelda = `celda-${posicion.fila}-${i}`;
+            const celdaDiv = document.getElementById(idCelda);
+            const celdaImg = celdaDiv.querySelector('img');
+            
+            // Asumiendo que tienes imágenes de letras Rojas (ej. AR.png, BR.png)
+            if (celdaImg && intento[i]) {
+                celdaImg.src = `assets/Rojo/${intento[i]}R.png`;
+                celdaDiv.classList.add('absent');
+            }
+        }
+
+    } else {
+        // 3b. Palabra VÁLIDA. Validar contra la secreta
+        validar(palabraSecreta, intento); 
+    }
+
+    // 4. LÓGICA DE AVANCE DE LÍNEA (Se ejecuta siempre, a menos que se haya ganado)
+    
+    if (encontrado) {
+        // 'validar' encontró la palabra, 'finDePartida' ya fue llamado.
+        return; 
+    }
+
+    // Si no se ha encontrado, se avanza de fila
+    cadena = ""; 
+    posicion.fila++;
+    posicion.columna = 0;
+    
+    if (posicion.fila < N) {
+        // Quedan intentos
+        iniciarTiempoTurno();
+    } else {
+        // No quedan intentos
+        finDePartida(`¡Has perdido! La palabra era: ${palabraSecreta}`);
+    }
+}
+
+// =========================================================================
+// FIN DE LAS FUNCIONES PARA LA API
+// =========================================================================
 
 function panelJuego() {
     // CAMBIO CLAVE: Usa divs para la maquetación del tablero (CSS Grid en #game-grid)
@@ -62,7 +156,7 @@ function panelTeclado() {
             // Cada tecla es un div (.keyboard-key) con el evento click
             sHTML += `
                 <div class="keyboard-key" id="Tecla${tecla}"
-                    onclick="${funcionOnclick}">
+                     onclick="${funcionOnclick}">
                     <img src="assets/Letras/${nombreImg}.gif"
                          alt="${tecla}">
                 </div>
@@ -74,6 +168,7 @@ function panelTeclado() {
     contenedorTeclado.innerHTML = sHTML;
 }
 
+// 🛑 MODIFICADA: Ahora solo añade la letra y llama a la función asíncrona al final de la palabra.
 function manejarTecla(letra) {
     if (encontrado || posicion.fila >= N) {
         return;
@@ -92,26 +187,13 @@ function manejarTecla(letra) {
     
     if (posicion.columna > N - 1) {
         
-        // 🛑 CRÍTICO: Detenemos el contador ANTES de validar y mover filas 🛑
-        detenerTiempoTurno();
+        // 🛑 CRÍTICO: NO detenemos el contador aquí, lo hacemos en validarIntentoAsincrono
         
-        validar(SECRETA, cadena); 
-        cadena = "";
-        
-        if (encontrado) {
-            return; 
-        }
-        
-        posicion.fila++;
-        posicion.columna = 0;
-        
-        if (posicion.fila < N) {
-            // Reiniciamos el tiempo para la nueva fila
-            iniciarTiempoTurno(); 
-        } else {
-            // El juego termina por intentos agotados
-            finDePartida(`¡Has perdido! La palabra era: ${SECRETA}`);
-        }
+        // LLAMADA CLAVE: Si la fila está llena, llama a la función asíncrona.
+        validarIntentoAsincrono(SECRETA, cadena); 
+
+        // NOTA: Toda la lógica de avance de fila y reinicio de cadena se ha movido
+        // a validarIntentoAsincrono para que la API tenga tiempo de responder.
     }
 }
 
@@ -279,7 +361,7 @@ async function obtenerSecreta() {
     } catch(error) {
         // Muestra el error más específico posible
         alert(`Error al obtener la palabra: ${error.message}. Usando palabra por defecto.`);
-        // SECRETA ya es "LENGUA"
+        // SECRETA ya es "SIFON"
     }
 }
 
@@ -303,23 +385,22 @@ function finDePartida(resultado, porTiempo = false){
     popUp.showModal();
 }
 
+// 🛑 MODIFICADO: Eliminada la llamada duplicada a obtenerSecreta()
 async function volverAJugar(){
     panelJuego();
     panelTeclado();
-    
-    // 🛑 ELIMINAR ESTA LÍNEA 🛑
-    // obtenerSecreta(); 
     
     cadena = "";
     posicion = { "fila": 0, "columna": 0 };
     encontrado = false;
     popUp.close();
 
-    await obtenerSecreta(); // 🛑 Deja solo esta llamada (la que espera) 🛑
+    await obtenerSecreta(); // 🛑 ÚNICA LLAMADA (CORRECTA)
     iniciarTiempoGlobal();
     iniciarTiempoTurno();
 }
 
+// 🛑 MODIFICADO: Implementada la redirección con 'replace'
 function salir(){
     // Asume que la variable global RANKING_URL existe en tu HTML
     if (typeof RANKING_URL !== 'undefined') {
@@ -330,9 +411,10 @@ function salir(){
     }
 }
 
+// 🛑 INICIO DEL JUEGO (LÓGICA ORIGINAL) 🛑
 panelJuego();
 panelTeclado();
-// 🛑 INICIO DE AMBOS TIEMPOS (después de obtener la palabra) 🛑
+
 obtenerSecreta().then(() => {
     iniciarTiempoGlobal();
     iniciarTiempoTurno();
