@@ -78,27 +78,38 @@ function manejarTecla(letra) {
     if (encontrado || posicion.fila >= N) {
         return;
     }
+    
+    // 🛑 CÓDIGO RESTAURADO PARA PINTAR LA LETRA 🛑
     const idCelda = `celda-${posicion.fila}-${posicion.columna}`;
     const celdaDiv = document.getElementById(idCelda); 
     const celdaImg = celdaDiv.querySelector('img'); 
 
     celdaImg.src = `assets/Letras/${letra}.gif`;
+    // 🛑 FIN CÓDIGO RESTAURADO 🛑
     
     cadena += letra;
     posicion.columna++;
+    
     if (posicion.columna > N - 1) {
+        
+        // 🛑 CRÍTICO: Detenemos el contador ANTES de validar y mover filas 🛑
+        detenerTiempoTurno();
+        
         validar(SECRETA, cadena); 
         cadena = "";
+        
         if (encontrado) {
             return; 
         }
+        
         posicion.fila++;
         posicion.columna = 0;
         
         if (posicion.fila < N) {
-            iniciarTiempoTurno(); // Reinicia el contador de 15s
+            // Reiniciamos el tiempo para la nueva fila
+            iniciarTiempoTurno(); 
         } else {
-            // El juego termina por intentos agotados (se llama finDePartida sin flag)
+            // El juego termina por intentos agotados
             finDePartida(`¡Has perdido! La palabra era: ${SECRETA}`);
         }
     }
@@ -122,25 +133,32 @@ function iniciarTiempoGlobal() {
     }, 1000);
 }
 
+// 🛑 NUEVAS FUNCIONES DE CONTROL DE TIEMPO (usando setTimeout recursivo) 🛑
+
+function detenerTiempoTurno() {
+    // Ahora limpia un Timeout, no un Interval
+    if (intervaloTurno) {
+        clearTimeout(intervaloTurno); 
+        intervaloTurno = null;
+    }
+}
+
 function actualizarDisplayTiempo() {
     if (tiempoDiv) {
         tiempoDiv.innerHTML = `Tiempo: ${tiempoRestante}s`;
     }
 }
 
-function detenerTiempoTurno() {
-    if (intervaloTurno) {
-        clearInterval(intervaloTurno);
-        intervaloTurno = null;
-    }
-}
-
 function iniciarTiempoTurno() {
-    detenerTiempoTurno(); // Asegura que no hay dos corriendo
-    tiempoRestante = TIEMPO_MAXIMO_TURNO;
-    actualizarDisplayTiempo();
-
-    intervaloTurno = setInterval(() => {
+    detenerTiempoTurno(); // 1. Detiene el anterior
+    
+    // Si recién empezamos un turno (columna = 0), reiniciamos el tiempo.
+    if (posicion.columna === 0) {
+        tiempoRestante = TIEMPO_MAXIMO_TURNO;
+    }
+    
+    // 2. Función que se llama a sí misma después de 1 segundo
+    const ticTac = () => {
         tiempoRestante--;
         actualizarDisplayTiempo();
 
@@ -148,9 +166,19 @@ function iniciarTiempoTurno() {
             detenerTiempoTurno();
             // Lógica de pérdida por tiempo: se pasa el flag 'true'
             finDePartida(`¡Tiempo agotado! La palabra era: ${SECRETA}`, true);
+        } else {
+            // 3. Se programa la próxima llamada después de 1000ms
+            intervaloTurno = setTimeout(ticTac, 1000);
         }
-    }, 1000);
+    };
+
+    // Muestra el tiempo restante (30s) al iniciar y programa el primer tick
+    actualizarDisplayTiempo(); 
+    
+    // 4. Inicia el primer tick (la primera llamada a ticTac será después de 1 segundo)
+    intervaloTurno = setTimeout(ticTac, 1000);
 }
+
 
 function validar(SECRETA, cadena) {
 
@@ -278,55 +306,29 @@ function finDePartida(resultado, porTiempo = false){
 async function volverAJugar(){
     panelJuego();
     panelTeclado();
-    obtenerSecreta();
+    
+    // 🛑 ELIMINAR ESTA LÍNEA 🛑
+    // obtenerSecreta(); 
+    
     cadena = "";
     posicion = { "fila": 0, "columna": 0 };
     encontrado = false;
     popUp.close();
 
-    await obtenerSecreta(); // Espera a la palabra
+    await obtenerSecreta(); // 🛑 Deja solo esta llamada (la que espera) 🛑
     iniciarTiempoGlobal();
     iniciarTiempoTurno();
-
 }
 
 function salir(){
-    window.close();
-}
-
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-const datosRanking = {
-    nombre: "Mi Nombre de Prueba",
-    tiempo: 120, // En segundos o el formato que uses
-    acierto: true // O 1
-};
-
-fetch('/ranking', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': csrfToken // Añadir el token CSRF
-    },
-    body: JSON.stringify(datosRanking)
-})
-.then(response => {
-    // Verificar si la respuesta fue exitosa (código 2xx, como 201)
-    if (!response.ok) {
-        // Manejar errores de validación o del servidor
-        throw new Error('Error al guardar el ranking: ' + response.statusText);
+    // Asume que la variable global RANKING_URL existe en tu HTML
+    if (typeof RANKING_URL !== 'undefined') {
+        window.location.replace(RANKING_URL); 
+    } else {
+        // Opción de reserva si Blade falla
+        window.location.replace('http://LocalHost/ranking'); 
     }
-    return response.json();
-})
-.then(data => {
-    console.log("Ranking guardado:", data);
-    // Aquí puedes actualizar la interfaz de usuario con la respuesta
-})
-.catch(error => {
-    console.error("Hubo un problema con la petición fetch:", error);
-});
-
-
+}
 
 panelJuego();
 panelTeclado();

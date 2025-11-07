@@ -18,7 +18,6 @@ Route::get('/', function () {
 });
 
 Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
-Route::post('/ranking', [RankingController::class, 'store'])->name('ranking.store');
 
 Route::get('/palabras', [PalabraController::class, 'index'])->name('palabras.index');
 
