@@ -1,0 +1,124 @@
+/* src/public/css/lingo-auth.css */
+
+/* 1. LAYOUT Y CONTENEDOR PRINCIPAL (Reemplaza el layout de Tailwind/Breeze) */
+body {
+    background-color: #f0f4f8; /* Gris claro para el fondo */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;   /* Centrado horizontal */
+    align-items: center;       /* Centrado vertical */
+    min-height: 100vh;
+}
+
+.lingo-auth-contenedor {
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    background-color: #ffffff; /* Fondo blanco para la tarjeta */
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* 2. ENCABEZADO Y LOGO */
+.lingo-auth-header {
+    margin-bottom: 25px;
+}
+
+.lingo-auth-header h1 {
+    color: #334e68;
+    font-size: 1.8rem;
+    margin-top: 10px;
+}
+
+/* 3. FORMULARIO Y GRUPOS DE CAMPOS */
+.lingo-auth-form {
+    text-align: left; /* Alinea etiquetas y campos a la izquierda */
+}
+
+.lingo-form-group {
+    margin-bottom: 15px;
+}
+
+/* Estilos para las etiquetas */
+label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #4a5568;
+    margin-bottom: 5px;
+}
+
+/* Estilos para los campos de texto (inputs) */
+input[type="email"], 
+input[type="password"],
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccd6e0;
+    border-radius: 6px;
+    box-sizing: border-box; /* Crucial para que el padding no desborde el width */
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+input[type="email"]:focus, 
+input[type="password"]:focus,
+input[type="text"]:focus {
+    border-color: #007bff; /* Resalta en azul al enfocar */
+    outline: none;
+}
+
+/* 4. ACCIONES Y BOTONES */
+.lingo-auth-actions {
+    display: flex;
+    flex-direction: column; /* Apila enlaces y botón verticalmente */
+    gap: 10px; /* Espacio entre elementos */
+    margin-top: 20px;
+}
+
+/* Estilo del botón de enviar (Login/Register) */
+.lingo-auth-button {
+    background-color: #007bff; 
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    order: 3; /* Coloca el botón al final del flex-column */
+}
+
+.lingo-auth-button:hover {
+    background-color: #0056b3;
+}
+
+/* 5. ENLACES (Registro, Olvidó Contraseña) */
+.lingo-auth-link {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    order: 1; /* Coloca los enlaces antes del botón */
+}
+
+.lingo-auth-link:hover {
+    text-decoration: underline;
+}
+
+/* 6. OTROS ELEMENTOS (Errores, Remember Me) */
+.lingo-remember-me {
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.lingo-remember-me label {
+    font-weight: normal; /* Para que el texto "Remember me" no sea negrita */
+    display: inline-flex;
+    align-items: center;
+}
