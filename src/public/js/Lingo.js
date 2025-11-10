@@ -410,7 +410,10 @@ function salir(){
         window.location.replace('http://LocalHost/ranking'); 
     }
 }
-
+function mostrarEstadisticas() {
+    // Esto le dice al navegador que vaya a la página de ranking
+    window.location.href = RANKING_URL; 
+}
 // 🛑 INICIO DEL JUEGO (LÓGICA ORIGINAL) 🛑
 panelJuego();
 panelTeclado();
