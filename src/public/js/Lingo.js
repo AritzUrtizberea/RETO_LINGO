@@ -114,10 +114,6 @@ async function validarIntentoAsincrono(palabraSecreta, intento) {
     }
 }
 
-// =========================================================================
-// FIN DE LAS FUNCIONES PARA LA API
-// =========================================================================
-
 function panelJuego() {
     // CAMBIO CLAVE: Usa divs para la maquetación del tablero (CSS Grid en #game-grid)
     let sHTML = `<h2>Panel de Juego</h2><div id="game-grid">`;
@@ -168,36 +164,28 @@ function panelTeclado() {
     contenedorTeclado.innerHTML = sHTML;
 }
 
-// 🛑 MODIFICADA: Ahora solo añade la letra y llama a la función asíncrona al final de la palabra.
 function manejarTecla(letra) {
     if (encontrado || posicion.fila >= N) {
         return;
     }
     
-    // 🛑 CÓDIGO RESTAURADO PARA PINTAR LA LETRA 🛑
     const idCelda = `celda-${posicion.fila}-${posicion.columna}`;
     const celdaDiv = document.getElementById(idCelda); 
     const celdaImg = celdaDiv.querySelector('img'); 
 
     celdaImg.src = `assets/Letras/${letra}.gif`;
-    // 🛑 FIN CÓDIGO RESTAURADO 🛑
     
     cadena += letra;
     posicion.columna++;
     
     if (posicion.columna > N - 1) {
         
-        // 🛑 CRÍTICO: NO detenemos el contador aquí, lo hacemos en validarIntentoAsincrono
-        
         // LLAMADA CLAVE: Si la fila está llena, llama a la función asíncrona.
         validarIntentoAsincrono(SECRETA, cadena); 
 
-        // NOTA: Toda la lógica de avance de fila y reinicio de cadena se ha movido
-        // a validarIntentoAsincrono para que la API tenga tiempo de responder.
     }
 }
 
-// 🛑 NUEVAS FUNCIONES DE CONTROL DE TIEMPO 🛑
 
 function detenerTiempoGlobal() {
     if (intervaloGlobal) {
@@ -215,7 +203,6 @@ function iniciarTiempoGlobal() {
     }, 1000);
 }
 
-// 🛑 NUEVAS FUNCIONES DE CONTROL DE TIEMPO (usando setTimeout recursivo) 🛑
 
 function detenerTiempoTurno() {
     // Ahora limpia un Timeout, no un Interval
