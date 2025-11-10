@@ -258,12 +258,7 @@ main {
 }
 
 dialog{
-    padding: 10px;
-    
-    /* 🛑 CORRECCIÓN: Quitamos el fixed/transform aquí */
-    /* Lo esencial para el centrado horizontal es margin: auto */
-    margin: auto; 
-    
+    padding: 10px; 
     /* Dimensiones móviles */
     width: 90%; 
     max-width: 500px;
@@ -279,7 +274,8 @@ dialog{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    display: none;
+    display:none;
+    
 }
 
 dialog[open] {

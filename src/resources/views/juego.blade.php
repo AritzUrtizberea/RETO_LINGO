@@ -32,8 +32,9 @@
         
     </header>
     <nav>
-        <button>Estadisticas</button>
-        <button>Idioma</button>
+        <button title="Botón deshabilitado">Estadisticas</button>
+        
+        <button title="Botón deshabilitado">Idioma</button>
         <a href="{{ route('ranking.index') }}" style="text-decoration: none;">
         <button>Ver Ranking</button>
         </a>
