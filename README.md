@@ -25,7 +25,7 @@ y mejorar poco a poco mis habilidades como desarrollador.
 │   ├── manualDeUs...
 │   ├── SSII presup...
 │   └── Wireframe.png
-├── src/            <-- Aquí está tu aplicación Laravel
+├── src/            <-- Aquí está la aplicación Laravel
 │   ├── app/
 │   ├── bootstrap/
 │   ├── config/
@@ -42,7 +42,7 @@ y mejorar poco a poco mis habilidades como desarrollador.
 │   │   └── robots.txt
 │   ├── public old/
 │   ├── resources/
-│   ├── routes/     <-- Tus rutas (web.php, api.php) están aquí
+│   ├── routes/     <-- rutas (web.php, api.php) están aquí
 │   ├── storage/
 │   ├── tests/
 │   ├── vendor/
